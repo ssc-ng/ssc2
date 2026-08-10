@@ -6,11 +6,10 @@
 {viewerjumpto "Syntax" "ssc2##syntax"}{...}
 {viewerjumpto "Description" "ssc2##description"}{...}
 {viewerjumpto "Command overview" "ssc2##overview"}{...}
-{viewerjumpto "Option for use with ssc2 describe" "ssc2##option_ssc2_describe"}{...}
+{viewerjumpto "Options for selecting a snapshot" "ssc2##options_snapshot"}{...}
 {viewerjumpto "Options for use with ssc2 install" "ssc2##options_ssc2_install"}{...}
-{viewerjumpto "Option for use with ssc2 type" "ssc2##option_ssc2_type"}{...}
-{viewerjumpto "Options for use with ssc2 copy" "ssc2##options_ssc2_copy"}{...}
-{viewerjumpto "Remarks" "ssc2##remarks"}{...}
+{viewerjumpto "Options inherited from ssc" "ssc2##options_inherited"}{...}
+{viewerjumpto "Keeping packages up to date" "ssc2##adoupdate"}{...}
 {viewerjumpto "Examples" "ssc2##examples"}{...}
 {p2colset 1 12 14 2}{...}
 {p2col:{bf:ssc2} {hline 2}}Install and uninstall packages from SSC, including from date-based snapshots of an SSC mirror{p_end}
@@ -102,10 +101,13 @@ repository.  This supports reproducibility: an analysis can be re-run with
 the exact package versions that were current at a given date.
 
 {pstd}
-When neither {opt date()} nor {opt from()} is specified, {opt ssc2}
-delegates to the official {helpb ssc} command, so {cmd:ssc2} behaves as a
-strict superset of {cmd:ssc}.  The subcommands {cmd:new}, {cmd:hot}, and
-{cmd:uninstall} are always delegated to {helpb ssc}.
+{cmd:ssc2} is a strict superset of {cmd:ssc}.  Anything {cmd:ssc} does,
+{cmd:ssc2} does identically: the subcommands {cmd:new}, {cmd:hot}, and
+{cmd:uninstall} are always passed through to {helpb ssc}, and
+{cmd:describe}, {cmd:install}, {cmd:type}, and {cmd:copy} are passed
+through whenever neither {opt date()} nor {opt from()} is specified.
+For the behavior and options of the passed-through subcommands, see
+{helpb ssc}.  Only the parts that differ are documented here.
 
 {pstd}
 Daily snapshots exist from {bf:2021-12-21} onward; three earlier snapshots
@@ -113,74 +115,45 @@ exist ({bf:2017-08-10}, {bf:2021-04-15}, {bf:2021-08-10}).  Type
 {cmd:ssc2 snapshots} for details.
 
 
-{pstd}
-You can uninstall particular packages by using {cmd:ssc2} {cmd:uninstall}.
-For the packages that you keep, 
-see {helpb ado update:[R] ado update}
-for an automated way of keeping those packages up to date.
-
-
 {marker overview}{...}
 {title:Command overview}
 
-{phang}
-{opt ssc2 describe} {it:pkgname} describes, but does not install, the specified
-    package.  Use {cmd:search} to find packages; see {manhelp search R}.  If
-    you know the package name but do not know the exact spelling, type
-    {opt ssc2 describe} followed by one letter, {opt a}-{opt z} or {opt _}
-    (underscore), to list all the packages starting with that letter.
+{pstd}
+Subcommands that accept {opt date()} and {opt from()}, and therefore can
+act on a snapshot:
 
 {phang}
-{opt ssc2 install} {it:pkgname} installs the specified package.  You do not
-    have to describe a package before installing it.  (You may also
-    install a package by using {cmd:net} {cmd:install}; see {manhelp net R}.)
+{opt ssc2 install} {it:pkgname} installs the specified package, from a
+    dated snapshot when {opt date()} is given.  See
+    {help ssc2##options_snapshot:Options for selecting a snapshot} and
+    {help ssc2##options_ssc2_install:Options for use with ssc2 install}.
 
 {phang}
-{opt ssc2 uninstall} {it:pkgname} removes the previously installed
-    package from your computer.  It does not matter how the package was
-    installed.  ({opt ssc2 uninstall} is a synonym for {opt ado uninstall}, so
-    either may be used to uninstall any package.)
+{opt ssc2 describe} {it:pkgname} describes, but does not install, the
+    specified package as it stood in the selected snapshot.  Give a single
+    letter, {opt a}-{opt z} or {opt _}, instead of a package name to list
+    all packages starting with that letter in that snapshot.
 
 {phang}
-{opt ssc2 type} {it:{help filename}} types a specific file stored at ssc2.
-    {opt ssc2 cat} is a synonym for {opt ssc2 type}, which may appeal to those
-    familiar with Unix.
+{opt ssc2 type} {it:{help filename}} and {opt ssc2 copy} {it:filename}
+    display and copy an individual file from the selected snapshot.
+    {opt ssc2 cat} and {opt ssc2 cp} are synonyms.
+
+{pstd}
+Subcommands specific to {cmd:ssc2}:
 
 {phang}
-{opt ssc2 copy} {it:filename} copies a specific file stored at ssc2 to your
-    computer.  By default, the file is copied to the current directory, but
-    you can use options to change this.  {opt ssc2 copy} is a rarely used
-    alternative to {opt ssc2 install} ...{cmd:, all}.  {opt ssc2 cp} is a
-    synonym for {opt ssc2 copy}.
-
-
-{marker options_ssc2_new}{...}
-{title:Options for use with ssc2 new}
+{opt ssc2 snapshots} reports the snapshot coverage of the mirror and how
+    to point {cmd:ssc2} at a different one.
 
 {phang}
-{cmd:saving(}{it:{help filename}}[{cmd:, replace}]{cmd:)} specifies that the
-    "what's new" summary be saved in {it:filename}.  If {it:filename} is
-    specified without a suffix, {it:filename}{cmd:.smcl} is assumed.  If
-    {opt saving()} is not specified, {cmd:saving(ssc2_result.smcl)} is assumed.
+{opt ssc2 versions} {it:pkgname} is not yet implemented.  It will list the
+    versions of a package available across snapshots.
 
-{phang}
-{opt type} specifies that the "what's new" results be displayed in the
-    Results window rather than in the Viewer.
-
-
-{marker options_ssc2_hot}{...}
-{title:Options for use with ssc2 hot}
-
-{phang}
-{cmd:n(}{it:#}{cmd:)} 
-    specifies the number of packages to list; {cmd:n(10)} is the default.
-    Specify {cmd:n(.)} to list all packages in order of popularity.
-
-{phang}
-{cmd:author(}{it:name}{cmd:)} 
-     lists the 10 most popular packages by the specified author.
-     If {cmd:n(}{it:#}{cmd:)} is also specified, the top {it:#} 
-     packages are listed.
+{pstd}
+Subcommands passed through to {helpb ssc} unchanged:
+{opt ssc2 new} ({opt whatsnew}), {opt ssc2 hot} ({opt whatshot}), and
+{opt ssc2 uninstall}.  Their options are documented in {helpb ssc}.
 
 
 {marker options_snapshot}{...}
@@ -190,11 +163,7 @@ for an automated way of keeping those packages up to date.
 {opt date(datespec)} selects the snapshot of the SSC archive as of the
     specified date.  {it:datespec} is either a date in {bf:YYYY-MM-DD}
     format (for example, {cmd:date(2022-01-07)}) or {bf:latest}, which uses
-    the most recently mirrored state of the archive.  With
-    {cmd:ssc2 install}, how an already-installed copy of the same package
-    is handled is governed by {opt replace}, {opt update}, and
-    {opt replaceall}; see
-    {help ssc2##options_ssc2_install:Options for use with ssc2 install}.  If no snapshot exists
+    the most recently mirrored state of the archive.  If no snapshot exists
     for the specified date, an error message points to the
     {browse "https://github.com/labordynamicsinstitute/ssc-mirror/tags":list of available snapshot dates}.
 
@@ -214,83 +183,34 @@ for an automated way of keeping those packages up to date.
     lookups.
 
 
-{marker option_ssc2_describe}{...}
-{title:Option for use with ssc2 describe}
-
-{phang}
-{cmd:saving(}{it:{help filename}}[{cmd:, replace}]{cmd:)} specifies that, in
-     addition to the description's being displayed on your screen, it be saved
-     in the specified file.
-
-{pmore}
-    If {it:filename} is specified without an extension, {opt .smcl} will be
-    assumed, and the file will be saved as a {help smcl:SMCL} file.
-
-{pmore}
-    If {it:filename} is specified with an extension, no default extension
-    is added.  If the extension is {opt .log}, the file will be stored as
-    a text file.
-
-{pmore}
-    If {opt replace} is specified, {it:filename} is replaced if it already
-    exists.
-
-
 {marker options_ssc2_install}{...}
 {title:Options for use with ssc2 install}
-
-{phang}
-{opt all} specifies that any ancillary files associated with the
-    package be downloaded to your current directory, in addition
-    to the program and help files being installed.  Ancillary files are files
-    that do not end in {opt .ado} or {opt .sthlp} and typically contain
-    datasets or examples of the use of the new command.
-
-{pmore}
-    You can find out which files are associated with the package by typing
-    {cmd:ssc2 describe} {it:pkgname} before or after installing.  If you
-    install without using the {opt all} option and then want the ancillary
-    files, you can {opt ssc2 install} again.
-
-{phang}
-{opt replace} specifies that any files being downloaded that already exist
-    on your computer be replaced by the downloaded files.  If
-    {opt replace} is not specified and any files already exist, none of the
-    files from the package is downloaded or installed.
-
-{pmore}
-    It is better not to specify the {opt replace} option and wait to see if
-    there is a problem.  If there is a problem, it is usually better to
-    uninstall the old package by using {opt ssc2 uninstall} or
-    {opt ado uninstall} (which are, in fact, the same command).
-
 
 {pstd}
 When a snapshot is requested with {opt date()} or {opt from()},
 {cmd:ssc2 install} compares the requested snapshot with any installed
 copy of the same package, using the snapshot date recorded in the
 installed copy's source; a copy installed from SSC directly carries no
-snapshot date and cannot be compared.  The behavior is then:
-without any of the options below, an existing installation is refused,
-as with official {cmd:ssc};
-{opt replace} reinstalls the {it:same} snapshot only;
-{opt update} moves to a {it:newer} snapshot only (an older snapshot is
-a no-op);
-{opt replaceall} replaces {it:any} installed version, downgrades
-included.  Because repeated dated installs would otherwise accumulate
-multiple tracker entries (each snapshot is a distinct source URL),
-all three options remove the superseded copies before installing.
-Without {opt date()} or {opt from()}, {cmd:ssc2 install} delegates to
-official {cmd:ssc}; if {opt replace} is specified and a
-snapshot-installed copy of the package exists, that copy is retired
-first (official {opt replace} means replacing whatever is installed,
-and retiring the snapshot entry keeps the package singly tracked).
+snapshot date and cannot be compared.  Because repeated dated installs
+would otherwise accumulate multiple entries in the ado directory (each
+snapshot is a distinct source URL, and {cmd:ado uninstall} would then
+report that more than one package matches), each of the three options
+below removes the superseded copies before installing.
+
+{phang}
+{opt replace} reinstalls the {it:same} snapshot.  If an installed copy is
+    from a different snapshot, or has no snapshot date, the install is
+    refused and the message points to {opt update} and {opt replaceall}.
+    Without {opt date()} or {opt from()}, {opt replace} has its usual
+    {cmd:ssc} meaning (see {help ssc2##options_inherited:below}), except
+    that a snapshot-installed copy of the package is retired first so the
+    package remains singly tracked.
 
 {phang}
 {opt update} (only with {opt date()} or {opt from()}) installs the
     requested snapshot only if it is newer than every installed copy of
-    the package.  If the installed copy is the same age or newer,
-    nothing is done.
+    the package.  If the installed copy is the same age or newer, nothing
+    is done.
 
 {phang}
 {opt replaceall} (only with {opt date()} or {opt from()}) replaces any
@@ -298,49 +218,47 @@ and retiring the snapshot entry keeps the package singly tracked).
     the option to use for downgrading, and the only applicable one with
     {cmd:date(latest)}.
 
-
-{marker option_ssc2_type}{...}
-{title:Option for use with ssc2 type}
-
-{phang}
-{opt asis} affects how files with the suffixes {cmd:.smcl} 
-    and {cmd:.sthlp} are displayed.  The default is to interpret SMCL
-    directives the file might contain.  {cmd:asis} specifies that the file be
-    displayed in raw, uninterpreted form.
+{pstd}
+If none of the three is specified and any file of the package already
+exists, nothing is downloaded or installed, exactly as with {cmd:ssc}.
 
 
-{marker options_ssc2_copy}{...}
-{title:Options for use with ssc2 copy}
+{marker options_inherited}{...}
+{title:Options inherited from ssc}
 
-{phang}
-{opt plus} specifies that the
-    file be copied to the {cmd:PLUS} directory, the directory where
-    community-contributed additions are installed.  Typing {helpb sysdir}
-    will display the identity of the {cmd:PLUS} directory on your computer.
+{pstd}
+The following options behave exactly as they do in {cmd:ssc}, and are
+documented in {helpb ssc}: {opt all} with {cmd:ssc2 install};
+{opt replace} with {cmd:ssc2 install} when no snapshot is requested (see
+{help ssc2##options_ssc2_install:above} for the snapshot case);
+{cmd:saving()} with {cmd:ssc2 describe} and {cmd:ssc2 new};
+{opt type} with {cmd:ssc2 new}; {cmd:n()} and {cmd:author()} with
+{cmd:ssc2 hot}; {opt asis} with {cmd:ssc2 type}; and {opt plus},
+{opt personal}, {opt replace}, {opt public}, and {opt binary} with
+{cmd:ssc2 copy}.
 
-{phang}
-{opt personal} specifies that the file be copied to your {cmd:PERSONAL}
-    directory as reported by {helpb sysdir}.
 
-{pmore}
-    If neither {opt plus} nor {opt personal} is specified,
-    the default is to copy the file to the current directory.
+{marker adoupdate}{...}
+{title:Keeping packages up to date}
 
-{phang}
-{opt replace} specifies that, if the file already exists on your computer,
-    the new file replace it.
+{pstd}
+{helpb ado update} checks each installed package against the source it
+was installed from and updates those that have changed.  Packages
+installed by {cmd:ssc2} from a dated snapshot record that snapshot's URL
+as their source, and a snapshot never changes, so {cmd:ado update} leaves
+them as they are: a pinned package stays pinned.  Packages installed
+without {opt date()} come from SSC itself and are updated normally.
 
-{phang}
-{opt public} specifies that the new file be made readable by everyone;
-    otherwise, the file will be created according to the default permission you
-    have set with your operating system.
+{pstd}
+To move a pinned package to a different snapshot, install it again with
+the new {opt date()} and {opt update} (to move forward only) or
+{opt replaceall} (to move in either direction).  To return a package to
+ordinary SSC tracking, install it without {opt date()}, using
+{opt replace}.
 
-{phang}
-{opt binary} specifies that the file being copied is a binary file and that it
-    is to be copied as is.  The default is to assume that the file is a text
-    file and change the end-of-line characters to those appropriate for your
-    computer/operating system.
-
+{pstd}
+Use {cmd:ssc2 uninstall} (a synonym for {helpb ado uninstall}) to remove a
+package, however it was installed.
 
 
 {marker examples}{...}
