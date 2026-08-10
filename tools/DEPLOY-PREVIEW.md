@@ -68,20 +68,18 @@ can deploy anything.
    op item get "cloudflare.com" --fields "Account ID" | gh secret set CLOUDFLARE_ACCOUNT_ID
    ```
 
-4. **Create the Cloudflare Pages project**, if it doesn't already exist.
-   The workflow deploys to a project named after the repository. Create it
-   once with [Wrangler](https://developers.cloudflare.com/workers/wrangler/)
+4. **Create the Cloudflare Pages project.** This must be done locally,
+   before opening a preview PR — `wrangler pages deploy` in CI does not
+   create the project on its own. Create it once with
+   [Wrangler](https://developers.cloudflare.com/workers/wrangler/)
    (requires Node.js), run from the repo root so the project name is
-   picked up from the checkout directory rather than typed by hand:
+   picked up from the checkout directory rather than typed by hand, and
+   set `main` as the production branch:
 
    ```bash
    npx wrangler login
-   npx wrangler pages project create "$(basename "$(git rev-parse --show-toplevel)")"
+   npx wrangler pages project create "$(basename "$(git rev-parse --show-toplevel)")" --production-branch main
    ```
-
-   If you'd rather not install anything locally, you can instead just open
-   a PR — `wrangler pages deploy` in CI will create the project
-   automatically on first run if it doesn't exist yet.
 
 5. **Verify the secrets are set:**
 
