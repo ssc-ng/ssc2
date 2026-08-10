@@ -46,13 +46,9 @@ description: "Install Stata packages from date-based snapshots of the SSC archiv
 
   <fieldset id="sharedsnap">
     <legend>Snapshot</legend>
+    <p class="hint" style="margin:.1rem 0 .7rem">Applies to every package
+      except those given their own snapshot below.</p>
     <label class="check">
-      <input type="checkbox" id="perpkg">
-      <span><b>Use a separate snapshot date for each package</b>
-      <span class="hint">off by default: one date applies to every package,
-      which is usually what a replication package wants</span></span>
-    </label>
-    <label class="check" style="margin-top:.5rem">
       <input type="checkbox" class="freeze" id="sharedfreeze" checked>
       <span><b>Freeze package versions to a dated snapshot?</b>
       <span class="hint">Freezing enhances reproducibility: anyone running your
@@ -124,9 +120,19 @@ let rows = [], nextId = 1;
 // The shared snapshot box is modelled as a row with no package input, so
 // rowDate/initRowSlider/the date-picker handler work on it unchanged.
 let shared = null;
-function perPkg(){ return $("perpkg").checked; }
-// The row whose date and freeze state govern a given package row.
-function govern(row){ return perPkg() ? row : shared; }
+// A row uses its own snapshot box only when its "own snapshot" box is
+// ticked; otherwise the shared box governs it.
+function ownsSnapshot(row){ return !!(row.el.own && row.el.own.checked); }
+function govern(row){ return ownsSnapshot(row) ? row : shared; }
+// Every snapshot box currently on screen, shared first.
+function activeBoxes(){ return [shared, ...rows.filter(ownsSnapshot)]; }
+
+// Keep the per-package boxes in the same order as the package rows, so
+// they read top-to-bottom in install order however they were added.
+function reorderSnapBoxes(){
+  const zone = $("snapzone");
+  for(const row of rows) zone.appendChild(row.el.fs);   // append = move
+}
 
 function rowDate(row){ return SNAPSHOTS[+row.el.tl.value]; }
 
@@ -174,6 +180,8 @@ function addRow(pkg){
   pr.innerHTML = '<div class="acwrap">' +
     '<input type="text" class="pkginput" spellcheck="false" autocomplete="off"' +
     ' placeholder="package name" role="combobox"></div>' +
+    '<label class="ownsnap" title="give this package its own snapshot date">' +
+    '<input type="checkbox" class="ownchk"><span>own snapshot</span></label>' +
     '<button type="button" class="delbtn" title="remove this package">&minus;</button>';
   const input = pr.querySelector("input");
   input.value = row.pkg;
@@ -181,6 +189,7 @@ function addRow(pkg){
 
   const fs = document.createElement("fieldset");
   fs.className = "snapbox";
+  fs.style.display = "none";          // shown only when "own snapshot" is on
   fs.innerHTML = '<legend></legend>' +
     '<label class="check"><input type="checkbox" class="freeze" checked>' +
     '<span><b>Freeze package versions to a dated snapshot?</b> ' +
@@ -212,10 +221,20 @@ function addRow(pkg){
   input.addEventListener("keydown", acKeydown);
   input.addEventListener("blur", ()=>setTimeout(acHide, 120));
   pr.querySelector(".delbtn").addEventListener("click", ()=>removeRow(row));
+  row.el.own = pr.querySelector(".ownchk");
+  row.el.own.addEventListener("change", ()=>{
+    // adopt the shared date when breaking away, so ticking the box never
+    // changes the generated command until the user moves the slider
+    if(ownsSnapshot(row)) initRowSlider(row, rowDate(shared));
+    row.el.fs.style.display = ownsSnapshot(row) ? "" : "none";
+    syncLegend(row);
+    render();
+  });
   wireSnapshotBox(row);
 
   rows.push(row);
   syncLegend(row);
+  reorderSnapBoxes();
   updateDelButtons();
   render();
 }
@@ -225,6 +244,7 @@ function removeRow(row){
   row.el.pr.remove(); row.el.fs.remove();
   rows = rows.filter(r => r !== row);
   rows.forEach(syncLegend);
+  reorderSnapBoxes();
   updateDelButtons();
   render();
 }
@@ -250,7 +270,7 @@ function render(){
   }
   let any = false;
   // whichever boxes are visible get their enabled/disabled state refreshed
-  for(const box of (perPkg() ? rows : [shared])){
+  for(const box of activeBoxes()){
     const on = box.el.freeze.checked;
     box.el.zone.classList.toggle("disabledzone", !on);
     box.el.tl.disabled = !on;
@@ -400,21 +420,6 @@ shared = { id: 0, pkg: "", el: {
   note:   sfs.querySelector(".snapnote") } };
 initRowSlider(shared, DEFAULT_DATE);
 wireSnapshotBox(shared);
-$("perpkg").addEventListener("change", ()=>{
-  // carry the shared date into the per-package boxes and back, so
-  // toggling never silently changes the generated commands
-  if(perPkg()) rows.forEach(r=>initRowSlider(r, rowDate(shared)));
-  else initRowSlider(shared, rowDate(rows[0]));
-  applyMode();
-  render();
-});
-function applyMode(){
-  $("snapzone").style.display = perPkg() ? "" : "none";
-  $("sharedfreeze").parentNode.style.display = perPkg() ? "none" : "";
-  $("sharedzone").style.display = perPkg() ? "none" : "";
-}
-applyMode();
-
 addRow("reghdfe");
 renderStats();
 refreshSnapshots();
