@@ -12,6 +12,11 @@
 #           check. On PRs this artifact can be downloaded from the run
 #           page to inspect the output without deploying anything.
 #   deploy: runs only for main (pushes, cron, and release calls), never PRs.
+#   preview: runs only for pull requests opened from a branch of this
+#           repository (not a fork -- forks can't read deploy secrets).
+#           Deploys the built site to Cloudflare Pages as a per-PR preview
+#           and posts (or updates) the preview link as a PR comment. See
+#           tools/DEPLOY-PREVIEW.md for the one-time Cloudflare setup.
 #
 # The weekly rebuild keeps embedded data at most 7 days stale; the page's
 # own single async API call tops up newer snapshot dates per visit.
@@ -83,6 +88,15 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: site/_site
+      - name: Upload site artifact for preview deploy
+        # upload-pages-artifact above produces a Pages-specific tarball
+        # that wrangler can't consume, so the preview job needs its own
+        # plain copy of the built site.
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: site/_site
+          retention-days: 14
 
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -94,3 +108,38 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  preview:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write     # only for the PR comment
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-preview
+          path: _site
+      - name: Deploy PR preview
+        id: preview
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy ./_site
+            --project-name=${{ github.event.repository.name }}
+            --branch=pr-${{ github.event.pull_request.number }}
+      - name: Publish preview link
+        if: steps.preview.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          URL: ${{ steps.preview.outputs.pages-deployment-alias-url }}
+        run: |
+          echo "📖 Preview: $URL" >> "$GITHUB_STEP_SUMMARY"
+          gh pr comment "$PR" --repo "$REPO" --edit-last --create-if-none \
+            --body "📖 **Preview:** $URL — commit \`${GITHUB_SHA:0:7}\`"
