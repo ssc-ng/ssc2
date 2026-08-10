@@ -88,6 +88,15 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: site/_site
+      - name: Build Jekyll site for the Cloudflare preview
+        # Cloudflare Pages serves PR previews at the domain root
+        # (pr-<n>.<project>.pages.dev/), not under /stata-ssc2/, so the
+        # main build's baseurl-prefixed asset links would 404 there and
+        # the preview would render unstyled. Rebuild into a separate
+        # directory with an empty baseurl for that deploy only; the
+        # GitHub Pages artifact above is unaffected.
+        run: bundle exec jekyll build --baseurl "" --destination _site-preview
+        working-directory: site
       - name: Upload site artifact for preview deploy
         # upload-pages-artifact above produces a Pages-specific tarball
         # that wrangler can't consume, so the preview job needs its own
@@ -95,7 +104,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: site-preview
-          path: site/_site
+          path: site/_site-preview
           retention-days: 14
 
   deploy:
