@@ -13,6 +13,19 @@ baseurl: "/stata-ssc2"
 search_enabled: true
 color_scheme: light
 
+# just-the-docs pipes every page through jekyll-compress-html
+# (_layouts/vendor/compress.html), whose collapse step rewrites all
+# whitespace runs outside <pre> into single spaces -- including inside
+# inline <script> blocks, which it does not protect. That flattens the
+# picker script onto one line, so a single `//` line comment would
+# comment out everything after it and kill the whole page (this
+# happened: see the fix accompanying the issue-1/-2 PR). Disable
+# compression entirely; tests/test_site.py additionally forbids `//`
+# comments in the inline script as defence in depth.
+compress_html:
+  ignore:
+    envs: all
+
 nav_external_links:
   - title: GitHub
     url: https://github.com/labordynamicsinstitute/stata-ssc2

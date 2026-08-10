@@ -124,5 +124,57 @@ class BuiltLinkTest(unittest.TestCase):
             )
 
 
+class InlineScriptCompressionSafetyTest(unittest.TestCase):
+    """The picker script is inline in site/index.html, and just-the-docs
+    pipes every page through jekyll-compress-html, whose collapse step
+    rewrites all whitespace runs outside <pre> into single spaces --
+    <script> contents included. On the flattened line, the first `//`
+    comment comments out the rest of the script, which killed the whole
+    deployed picker once (v2.2.2 era). Two defences, both checked here:
+    compression is disabled in _config.yml, and the script sticks to
+    `/* */` comments so it would survive even if compression came back
+    (e.g. via a theme update or a config regression).
+    """
+
+    INDEX = REPO / "site" / "index.html"
+    _SCRIPT = re.compile(r"<script[^>]*>(.*?)</script>", re.S)
+    # `//` not preceded by `:` -- lets https:// URLs through. A regex
+    # literal containing `//` would false-positive; none exists today,
+    # and if one is ever needed, escape it as /\/\// and keep this test.
+    _LINE_COMMENT = re.compile(r"(?<!:)//")
+
+    def test_inline_script_has_no_line_comments(self):
+        offenders = []
+        html = self.INDEX.read_text(encoding="utf-8")
+        for block in self._SCRIPT.findall(html):
+            for number, line in enumerate(block.splitlines(), start=1):
+                if self._LINE_COMMENT.search(line):
+                    offenders.append("script line %d: %s" % (number, line.strip()))
+        self.assertEqual(
+            [],
+            offenders,
+            "`//` comments in the inline script break the deployed site if "
+            "HTML compression collapses newlines; use /* */ instead:\n"
+            + "\n".join(offenders),
+        )
+
+    def test_html_compression_is_disabled(self):
+        text = CONFIG.read_text(encoding="utf-8")
+        block = re.search(
+            r"^compress_html:\s*\n((?:[ \t]+.*\n?)*)", text, re.M
+        )
+        self.assertIsNotNone(
+            block,
+            "_config.yml must keep a compress_html block disabling the "
+            "theme's HTML compression (see the comment there)",
+        )
+        self.assertRegex(
+            block.group(1),
+            r"envs:\s*all",
+            "compress_html must set ignore.envs: all so the collapse step "
+            "never rewrites whitespace inside the inline picker script",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

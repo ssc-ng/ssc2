@@ -117,21 +117,21 @@ function nearestIndex(iso){
 /* ------------------------ package rows + snapshots ------------------- */
 let rows = [], nextId = 1;
 
-// The shared snapshot box is modelled as a row with no package input, so
-// rowDate/initRowSlider/the date-picker handler work on it unchanged.
+/* The shared snapshot box is modelled as a row with no package input, so
+   rowDate/initRowSlider/the date-picker handler work on it unchanged. */
 let shared = null;
-// A row uses its own snapshot box only when its "own snapshot" box is
-// ticked; otherwise the shared box governs it.
+/* A row uses its own snapshot box only when its "own snapshot" box is
+   ticked; otherwise the shared box governs it. */
 function ownsSnapshot(row){ return !!(row.el.own && row.el.own.checked); }
 function govern(row){ return ownsSnapshot(row) ? row : shared; }
-// Every snapshot box currently on screen, shared first.
+/* Every snapshot box currently on screen, shared first. */
 function activeBoxes(){ return [shared, ...rows.filter(ownsSnapshot)]; }
 
-// Keep the per-package boxes in the same order as the package rows, so
-// they read top-to-bottom in install order however they were added.
+/* Keep the per-package boxes in the same order as the package rows, so
+   they read top-to-bottom in install order however they were added. */
 function reorderSnapBoxes(){
   const zone = $("snapzone");
-  for(const row of rows) zone.appendChild(row.el.fs);   // append = move
+  for(const row of rows) zone.appendChild(row.el.fs);   /* append = move */
 }
 
 function rowDate(row){ return SNAPSHOTS[+row.el.tl.value]; }
@@ -189,7 +189,7 @@ function addRow(pkg){
 
   const fs = document.createElement("fieldset");
   fs.className = "snapbox";
-  fs.style.display = "none";          // shown only when "own snapshot" is on
+  fs.style.display = "none";          /* shown only when "own snapshot" is on */
   fs.innerHTML = '<legend></legend>' +
     '<label class="check"><input type="checkbox" class="freeze" checked>' +
     '<span><b>Freeze package versions to a dated snapshot?</b> ' +
@@ -223,8 +223,8 @@ function addRow(pkg){
   pr.querySelector(".delbtn").addEventListener("click", ()=>removeRow(row));
   row.el.own = pr.querySelector(".ownchk");
   row.el.own.addEventListener("change", ()=>{
-    // adopt the shared date when breaking away, so ticking the box never
-    // changes the generated command until the user moves the slider
+    /* adopt the shared date when breaking away, so ticking the box never
+       changes the generated command until the user moves the slider */
     if(ownsSnapshot(row)) initRowSlider(row, rowDate(shared));
     row.el.fs.style.display = ownsSnapshot(row) ? "" : "none";
     syncLegend(row);
@@ -269,7 +269,7 @@ function render(){
     lines.push('');
   }
   let any = false;
-  // whichever boxes are visible get their enabled/disabled state refreshed
+  /* whichever boxes are visible get their enabled/disabled state refreshed */
   for(const box of activeBoxes()){
     const on = box.el.freeze.checked;
     box.el.zone.classList.toggle("disabledzone", !on);
@@ -405,7 +405,7 @@ function renderStats(extra){
   "Data generated <code>"+BUILD_STAMP+"</code>"+(extra||"")+".";
 }
 
-// build the shared pseudo-row from the markup above
+/* build the shared pseudo-row from the markup above */
 const sfs = $("sharedsnap");
 shared = { id: 0, pkg: "", el: {
   fs: sfs,
