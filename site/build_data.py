@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-build_data.py -- regenerate the embedded data block of index.html
-from the live ssc-mirror repository.
+build_data.py -- regenerate the embedded data block of the picker
+script (assets/js/picker.js) from the live ssc-mirror repository.
 
-Run manually:      python3 build_data.py [path/to/index.html]
+Run manually:      python3 build_data.py [path/to/picker.js]
 Run by CI daily:   see .github/workflows/site.yml
 What it rewrites (everything between @@DATA-START@@ and @@DATA-END@@):
   BUILD_STAMP    today's date (UTC)
@@ -66,7 +66,7 @@ def js_list(items) -> str:
 
 
 def main() -> int:
-    path = sys.argv[1] if len(sys.argv) > 1 else "index.html"
+    path = sys.argv[1] if len(sys.argv) > 1 else "assets/js/picker.js"
     t0 = time.time()
 
     tags = snapshot_tags()
