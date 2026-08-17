@@ -77,15 +77,15 @@ class TestNoHardcodedVersions(unittest.TestCase):
 
 
 class TestDataMarkersIntact(unittest.TestCase):
-    def test_index_html_still_has_the_data_markers(self):
+    def test_picker_script_still_has_the_data_markers(self):
         # site/build_data.py rewrites the block between these. Rendering
         # must never touch them.
-        text = read("site/index.html")
+        text = read("site/assets/js/picker.js")
         self.assertIn("@@DATA-START@@", text)
         self.assertIn("@@DATA-END@@", text)
 
     def test_token_regex_ignores_the_data_markers(self):
-        text = read("site/index.html")
+        text = read("site/assets/js/picker.js")
         self.assertNotIn("@@DATA-START@@",
                          "".join(TOKEN_RE.findall(text)))
 
@@ -108,7 +108,8 @@ class TestCitationFile(unittest.TestCase):
         self.assertRegex(read("CITATION.cff"), r"(?m)^version: \S+$")
 
 
-DOC_FILES = ["README.md", "site/about.md", "site/index.html"]
+DOC_FILES = ["README.md", "site/about.md", "site/index.html",
+             "site/assets/js/picker.js"]
 
 
 class TestDocsUsePlaceholders(unittest.TestCase):
@@ -118,8 +119,10 @@ class TestDocsUsePlaceholders(unittest.TestCase):
     def test_about_page_pins_via_placeholder(self):
         self.assertIn("@VERSION_TAG@", read("site/about.md"))
 
-    def test_index_page_pins_via_placeholder(self):
-        self.assertIn("@VERSION_TAG@", read("site/index.html"))
+    def test_picker_script_pins_via_placeholder(self):
+        # The install-bootstrap line lives in the external picker script,
+        # so that is where the version must be pinned via placeholder.
+        self.assertIn("@VERSION_TAG@", read("site/assets/js/picker.js"))
 
     def test_docs_only_use_defined_tokens(self):
         for rel in DOC_FILES:

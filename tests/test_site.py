@@ -124,5 +124,115 @@ class BuiltLinkTest(unittest.TestCase):
             )
 
 
+class ExternalPickerScriptTest(unittest.TestCase):
+    """The picker script must stay in an external asset, never inline.
+
+    just-the-docs pipes every page through jekyll-compress-html, whose
+    whitespace-collapse step rewrites all whitespace runs outside <pre>
+    into single spaces -- inline <script> contents included. A flattened
+    script dies at its first `//` comment, which killed the whole
+    deployed picker once (v2.2.2 era). Static assets are copied verbatim
+    by Jekyll and are immune, so the script lives in
+    site/assets/js/picker.js and is loaded from the theme's custom-head
+    include, gated to pages that set `picker: true` front matter.
+    """
+
+    SITE = REPO / "site"
+    PICKER = SITE / "assets" / "js" / "picker.js"
+    HEAD = SITE / "_includes" / "head_custom.html"
+    _INLINE = re.compile(r"<script(?![^>]*\bsrc=)[^>]*>\s*\S", re.S)
+
+    def test_site_pages_have_no_inline_scripts(self):
+        offenders = [
+            str(page.relative_to(REPO))
+            for page in list(self.SITE.glob("*.html")) + list(self.SITE.glob("*.md"))
+            if self._INLINE.search(page.read_text(encoding="utf-8"))
+        ]
+        self.assertEqual(
+            [],
+            offenders,
+            "inline <script> content is corrupted by the theme's HTML "
+            "compression; move it to site/assets/ and load it via "
+            "_includes/head_custom.html:\n" + "\n".join(offenders),
+        )
+
+    def test_picker_script_asset_exists_with_data_markers(self):
+        self.assertTrue(self.PICKER.is_file(), "site/assets/js/picker.js missing")
+        js = self.PICKER.read_text(encoding="utf-8")
+        for marker in ("@@DATA-START@@", "@@DATA-END@@"):
+            self.assertIn(
+                marker,
+                js,
+                "picker.js must keep the %s marker that site/build_data.py "
+                "rewrites in CI" % marker,
+            )
+
+    def test_head_custom_loads_picker_behind_front_matter_gate(self):
+        self.assertTrue(
+            self.HEAD.is_file(), "site/_includes/head_custom.html missing"
+        )
+        head = self.HEAD.read_text(encoding="utf-8")
+        self.assertIn(
+            "{% if page.picker %}",
+            head,
+            "the picker script must load only on pages opting in via "
+            "`picker: true`; it dereferences picker-only elements and "
+            "would throw on every other page",
+        )
+        self.assertRegex(
+            head,
+            r"relative_url",
+            "the script src must go through relative_url so it carries "
+            "the baseurl prefix on project Pages",
+        )
+        self.assertRegex(
+            head,
+            r"<script[^>]*\bdefer\b",
+            "the script must load with defer: it wires the DOM at top "
+            "level and, loaded from <head> without defer, would run "
+            "before the body exists",
+        )
+
+    def test_index_front_matter_opts_into_picker(self):
+        index = (self.SITE / "index.html").read_text(encoding="utf-8")
+        front = index.split("---")[1]
+        self.assertRegex(
+            front,
+            r"(?m)^picker: true$",
+            "site/index.html must set `picker: true` or the custom-head "
+            "gate never loads the picker script",
+        )
+
+
+class BuiltPickerScriptTest(unittest.TestCase):
+    """When the site has been built, index.html must actually load the
+    picker asset and the asset must exist in the output. Skipped on a
+    clean checkout, like the other built-output checks."""
+
+    def setUp(self):
+        if not BUILT.is_dir():
+            self.skipTest("site/_site not built; run tools/serve_site.sh")
+        self.baseurl = read_config().get("baseurl", "")
+
+    def test_built_index_links_existing_picker_script(self):
+        html = (BUILT / "index.html").read_text(encoding="utf-8")
+        scripts = [
+            link
+            for link in _LINK.findall(html)
+            if link.endswith("/assets/js/picker.js")
+        ]
+        self.assertTrue(scripts, "built index.html does not load picker.js")
+        for src in scripts:
+            self.assertTrue(
+                src.startswith(self.baseurl + "/"),
+                "picker.js src %r lacks the %r prefix" % (src, self.baseurl),
+            )
+            relative = src[len(self.baseurl) :].lstrip("/")
+            self.assertTrue(
+                (BUILT / relative).is_file(),
+                "index.html loads %s but %s was not generated" % (src, relative),
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
