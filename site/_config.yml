@@ -7,15 +7,15 @@ theme: just-the-docs
 # prefix belongs in `baseurl`, and omitting it makes every theme asset
 # link resolve to the host root and 404 -- an entirely unstyled site.
 # tests/test_site.py keeps the two in step.
-url: "https://labordynamicsinstitute.github.io"
-baseurl: "/stata-ssc2"
+url: "https://ssc-ng.net"
+baseurl: "/ssc2"
 
 search_enabled: true
 color_scheme: light
 
 nav_external_links:
   - title: GitHub
-    url: https://github.com/labordynamicsinstitute/stata-ssc2
+    url: https://github.com/ssc-ng/ssc2
     hide_icon: false
 
 exclude:

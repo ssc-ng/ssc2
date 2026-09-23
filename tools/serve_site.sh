@@ -6,7 +6,7 @@
 # Everything runs inside a container built from site/Dockerfile, which
 # pins the same Ruby and Gemfile as the site.yml workflow, so what you
 # see locally is what GitHub Pages deploys. In particular the site is
-# served under its baseurl prefix -- http://localhost:4000/stata-ssc2/,
+# served under its baseurl prefix -- http://localhost:4000/ssc2/,
 # not http://localhost:4000/ -- because serving at the root would hide
 # exactly the class of broken-asset-path bug this harness exists to
 # catch.

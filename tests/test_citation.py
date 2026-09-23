@@ -17,7 +17,7 @@ title: "ssc2: Install Stata packages from date-based snapshots"
 version: 2.0.0
 date-released: 2026-07-08
 license: MIT
-repository-code: "https://github.com/labordynamicsinstitute/stata-ssc2"
+repository-code: "https://github.com/ssc-ng/ssc2"
 abstract: >-
   ssc2 is a drop-in replacement for the Stata ssc command.
   version: not-a-field

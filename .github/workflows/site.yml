@@ -92,7 +92,7 @@ jobs:
           path: site/_site
       - name: Build Jekyll site for the Cloudflare preview
         # Cloudflare Pages serves PR previews at the domain root
-        # (pr-<n>.<project>.pages.dev/), not under /stata-ssc2/, so the
+        # (pr-<n>.<project>.pages.dev/), not under /ssc2/, so the
         # main build's baseurl-prefixed asset links would 404 there and
         # the preview would render unstyled. Rebuild into a separate
         # directory with an empty baseurl for that deploy only; the

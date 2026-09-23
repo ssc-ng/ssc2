@@ -51,7 +51,7 @@ tag always points at the newest stable release, never at a pre-release.
 
 ```stata
 * the current stable release
-net install ssc2, all replace from("https://raw.githubusercontent.com/labordynamicsinstitute/stata-ssc2/latest/")
+net install ssc2, all replace from("https://raw.githubusercontent.com/ssc-ng/ssc2/latest/")
 ```
 
 To pin an exact version — which is what you want in a replication
@@ -59,13 +59,13 @@ package — use the release tag instead of `latest`:
 
 ```stata
 * a specific release
-net install ssc2, all replace from("https://raw.githubusercontent.com/labordynamicsinstitute/stata-ssc2/@VERSION_TAG@/")
+net install ssc2, all replace from("https://raw.githubusercontent.com/ssc-ng/ssc2/@VERSION_TAG@/")
 ```
 
 > The tag above is substituted at release time. On the `main` branch you
 > will see an unrendered placeholder there instead — `main` is the
 > template, not an installable version. See
-> [Releases](https://github.com/labordynamicsinstitute/stata-ssc2/releases)
+> [Releases](https://github.com/ssc-ng/ssc2/releases)
 > for every tag you can substitute. Do **not** install from `main`.
 
 ## Example
@@ -100,7 +100,7 @@ handling.
 
 ## Website
 
-The project website is at <https://labordynamicsinstitute.github.io/stata-ssc2/>,
+The project website is at <https://ssc-ng.net/ssc2/>,
 built with Jekyll using the
 [just-the-docs](https://just-the-docs.com/) theme.
 
@@ -116,7 +116,7 @@ tools/serve_site.sh test     # build, then run the checks in tests/test_site.py
 ```
 
 The preview is served under the site's `baseurl`, at
-<http://localhost:4000/stata-ssc2/> rather than at `localhost:4000` —
+<http://localhost:4000/ssc2/> rather than at `localhost:4000` —
 deliberately, because it is how GitHub project Pages serves it. Serving
 at the root would hide broken asset paths, which is precisely the bug
 this harness was built to catch.

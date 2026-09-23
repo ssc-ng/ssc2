@@ -25,7 +25,7 @@
 #
 # Users install from the tags this creates:
 #   net install ssc2, all replace ///
-#     from("https://raw.githubusercontent.com/labordynamicsinstitute/stata-ssc2/latest/")
+#     from("https://raw.githubusercontent.com/ssc-ng/ssc2/latest/")
 
 name: release
 on:
