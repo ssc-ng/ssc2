@@ -115,7 +115,9 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      # The organization site owns the custom domain; this project site
+      # lives under its repo-name path on that host.
+      url: https://ssc-ng.net/ssc2/
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5

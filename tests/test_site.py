@@ -22,6 +22,7 @@ from urllib.parse import urlparse
 REPO = Path(__file__).resolve().parent.parent
 CONFIG = REPO / "site" / "_config.yml"
 BUILT = REPO / "site" / "_site"
+SITE_WORKFLOW = REPO / ".github" / "workflows" / "site.yml"
 
 # Where GitHub publishes this repository's Pages site, and the path
 # prefix that follows from it.
@@ -73,6 +74,17 @@ class BaseUrlConfigTest(unittest.TestCase):
             self.config["url"].rstrip("/") + self.config.get("baseurl", ""),
             DEPLOY_URL,
             "url + baseurl must equal the address the site is published at",
+        )
+
+
+class PagesWorkflowTest(unittest.TestCase):
+    def test_deploy_environment_uses_custom_domain_url(self):
+        workflow = SITE_WORKFLOW.read_text(encoding="utf-8")
+        self.assertRegex(
+            workflow,
+            r"(?m)^      url: https://ssc-ng\.net/ssc2/$",
+            "the Pages deployment environment should advertise the custom "
+            "domain URL, not the default github.io host",
         )
 
 
