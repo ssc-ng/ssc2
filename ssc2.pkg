@@ -18,6 +18,6 @@ d Version: @VERSION@
 d Distribution-Date: @DATE_COMPACT@
 d
 d Authors: Lars Vilhuber
-d Support: https://github.com/labordynamicsinstitute/stata-ssc2/issues
+d Support: https://github.com/ssc-ng/ssc2/issues
 f ado/ssc2.ado
 f sthlp/ssc2.sthlp

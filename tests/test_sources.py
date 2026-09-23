@@ -110,6 +110,15 @@ class TestCitationFile(unittest.TestCase):
 
 DOC_FILES = ["README.md", "site/about.md", "site/index.html",
              "site/assets/js/picker.js"]
+MOVED_REPO_FILES = [
+    "README.md",
+    "site/_config.yml",
+    "site/about.md",
+    "site/assets/js/picker.js",
+    "CITATION.cff",
+    "stata.toc",
+    "ssc2.pkg",
+]
 
 
 class TestDocsUsePlaceholders(unittest.TestCase):
@@ -159,4 +168,31 @@ class TestNoForkReferences(unittest.TestCase):
         # give the user an ado file whose version reads "@VERSION@".
         for rel in DOC_FILES:
             with self.subTest(file=rel):
-                self.assertNotIn("stata-ssc2/main", read(rel))
+                self.assertNotRegex(
+                    read(rel),
+                    r"raw\.githubusercontent\.com/.+/ssc2/main",
+                )
+
+
+class TestMovedRepositoryUrls(unittest.TestCase):
+    def test_public_files_no_longer_reference_the_old_repo_slug(self):
+        for rel in MOVED_REPO_FILES:
+            with self.subTest(file=rel):
+                self.assertNotIn(
+                    "labordynamicsinstitute/stata-ssc2",
+                    read(rel),
+                )
+
+    def test_public_files_use_the_new_repo_slug_where_expected(self):
+        expected = {
+            "README.md": "https://github.com/ssc-ng/ssc2/releases",
+            "site/_config.yml": "https://github.com/ssc-ng/ssc2",
+            "site/about.md": "https://github.com/ssc-ng/ssc2",
+            "site/assets/js/picker.js": "https://raw.githubusercontent.com/ssc-ng/ssc2/",
+            "CITATION.cff": "https://github.com/ssc-ng/ssc2",
+            "stata.toc": "https://github.com/ssc-ng/ssc2",
+            "ssc2.pkg": "https://github.com/ssc-ng/ssc2/issues",
+        }
+        for rel, needle in expected.items():
+            with self.subTest(file=rel):
+                self.assertIn(needle, read(rel))

@@ -41,7 +41,7 @@ tag always points at the newest stable release, never at a pre-release.
 
 ```stata
 * The current stable release
-net install ssc2, all replace from("https://raw.githubusercontent.com/labordynamicsinstitute/stata-ssc2/latest/")
+net install ssc2, all replace from("https://raw.githubusercontent.com/ssc-ng/ssc2/latest/")
 ```
 
 To pin an exact version in a replication package, use the release tag
@@ -49,7 +49,7 @@ instead of `latest`:
 
 ```stata
 * A specific release
-net install ssc2, all replace from("https://raw.githubusercontent.com/labordynamicsinstitute/stata-ssc2/@VERSION_TAG@/")
+net install ssc2, all replace from("https://raw.githubusercontent.com/ssc-ng/ssc2/@VERSION_TAG@/")
 ```
 
 ## Quick example
@@ -91,16 +91,16 @@ See the [Reference](reference.html) page for full details.
 
 ## Testing
 
-Run [`test.do`](https://github.com/labordynamicsinstitute/stata-ssc2/blob/main/test.do)
+Run [`test.do`](https://github.com/ssc-ng/ssc2/blob/main/test.do)
 in Stata. It exercises dated installs, delegation to `ssc`, `date(latest)`,
 `copy`/`type` with dates, and error handling.
 
 ## Links
 
-- Source: [github.com/labordynamicsinstitute/stata-ssc2](https://github.com/labordynamicsinstitute/stata-ssc2)
+- Source: [github.com/ssc-ng/ssc2](https://github.com/ssc-ng/ssc2)
 - Snapshot mirror: [github.com/labordynamicsinstitute/ssc-mirror](https://github.com/labordynamicsinstitute/ssc-mirror)
-- Issues and support: [issue tracker](https://github.com/labordynamicsinstitute/stata-ssc2/issues)
-- License: see [LICENSE](https://github.com/labordynamicsinstitute/stata-ssc2/blob/main/LICENSE)
+- Issues and support: [issue tracker](https://github.com/ssc-ng/ssc2/issues)
+- License: see [LICENSE](https://github.com/ssc-ng/ssc2/blob/main/LICENSE)
 
 ## Authors
 

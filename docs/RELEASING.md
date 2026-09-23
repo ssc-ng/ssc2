@@ -112,7 +112,7 @@ reads `CITATION.cff` from that tarball for the deposition metadata, so
 the DOI record is correct without any extra step.
 
 To turn it on: log in to Zenodo with GitHub, flip the switch for
-`labordynamicsinstitute/stata-ssc2`, then cut a release. Zenodo only sees
+`ssc-ng/ssc2`, then cut a release. Zenodo only sees
 releases published *after* the switch is flipped.
 
 Two things worth knowing before you enable it:

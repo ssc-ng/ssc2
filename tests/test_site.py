@@ -2,7 +2,7 @@
 on the links in the generated HTML.
 
 The site is deployed to GitHub *project* Pages at
-https://labordynamicsinstitute.github.io/stata-ssc2/, i.e. under a path
+https://ssc-ng.net/ssc2/, i.e. under a path
 prefix rather than at the host root. Jekyll only emits that prefix when
 `baseurl` is set; without it every `{{ site.baseurl }}`-derived link --
 including the theme's stylesheets -- points at the host root and 404s,
@@ -25,8 +25,8 @@ BUILT = REPO / "site" / "_site"
 
 # Where GitHub publishes this repository's Pages site, and the path
 # prefix that follows from it.
-DEPLOY_URL = "https://labordynamicsinstitute.github.io/stata-ssc2"
-BASEURL = "/stata-ssc2"
+DEPLOY_URL = "https://ssc-ng.net/ssc2"
+BASEURL = "/ssc2"
 
 # Top-level `key: value` in _config.yml, ignoring nested/list entries.
 _TOP_LEVEL = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*):[ \t]*(.*?)[ \t]*$")

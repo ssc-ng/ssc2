@@ -181,7 +181,7 @@ function render(){
   const lines = [];
   if($("bootstrap").checked){
     lines.push('<span class="cm">* one-time: install ssc2 itself (@VERSION_TAG@; use "latest" to track releases)</span>');
-    lines.push('<span class="p">. </span>net install ssc2, all replace from("https://raw.githubusercontent.com/labordynamicsinstitute/stata-ssc2/@VERSION_TAG@/")');
+    lines.push('<span class="p">. </span>net install ssc2, all replace from("https://raw.githubusercontent.com/ssc-ng/ssc2/@VERSION_TAG@/")');
     lines.push('');
   }
   if(mirrorURL() !== DEFAULT_MIRROR){

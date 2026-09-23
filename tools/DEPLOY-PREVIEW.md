@@ -22,7 +22,7 @@ boundary, not a bug.
 
 The Cloudflare Pages **project name is derived automatically** from the
 GitHub repository name (`${{ github.event.repository.name }}` in the
-workflow) — currently `stata-ssc2`. Nothing in the workflow needs editing
+workflow) — currently `ssc2`. Nothing in the workflow needs editing
 if the repo is ever renamed or this pattern is copied into another repo;
 only the one-time Cloudflare project creation below needs to match.
 

@@ -23,7 +23,7 @@ end
 
 // ---- 0. install the ssc2 under test (from THIS working copy) ------------
 // To test-install over the network instead, use your fork, e.g.:
-//   net install ssc2, all replace from("https://raw.githubusercontent.com/<user>/stata-ssc2/<branch>")
+//   net install ssc2, all replace from("https://raw.githubusercontent.com/<owner>/ssc2/<branch>")
 capture ado uninstall ssc2
 discard
 net install ssc2, all replace from("`c(pwd)'")
