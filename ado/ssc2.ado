@@ -1,6 +1,6 @@
 *! version @VERSION@ @DATE_STATA@  L. Vilhuber and contributors
 *! Install Stata packages from date-based snapshots of the SSC archive,
-*! mirrored at https://github.com/labordynamicsinstitute/ssc-mirror
+*! mirrored at https://github.com/ssc-ng/archive
 *!
 *! Design:
 *!   - Subcommands with no snapshot-specific behavior (new/whatsnew,
@@ -86,7 +86,7 @@ program define ssc2
 	if `"`cmd'"'=="versions" {
 		di as err "{bf:ssc2 versions} is not yet implemented."
 		di as err "It will list the versions of a package available across snapshots."
-		di as err `"Meanwhile, browse {browse "https://github.com/labordynamicsinstitute/ssc-mirror/tags":the snapshot list}."'
+		di as err `"Meanwhile, browse {browse "https://github.com/ssc-ng/archive/tags":the snapshot list}."'
 		exit 198
 	}
 
@@ -119,7 +119,7 @@ program define ResolveSnapshot, rclass
 		local from : environment SSC2_MIRROR
 	}
 	if `"`from'"'=="" {
-		local from "https://raw.githubusercontent.com/labordynamicsinstitute/ssc-mirror"
+		local from "https://raw.githubusercontent.com/ssc-ng/archive"
 		local isdefault 1
 	}
 
@@ -131,7 +131,7 @@ program define ResolveSnapshot, rclass
 		local api : environment SSC2_MIRROR_API
 	}
 	if `"`api'"'=="" & `isdefault' {
-		local api "https://api.github.com/repos/labordynamicsinstitute/ssc-mirror"
+		local api "https://api.github.com/repos/ssc-ng/archive"
 	}
 	* strip one trailing slash, if any
 	if substr(`"`from'"', -1, 1)=="/" {
@@ -198,7 +198,7 @@ program define DiagnoseSnapshot
 		}
 		else if `crc'==601 {
 			di as err `"  the mirror has {bf:no snapshot dated `ref'}"'
-			di as err `"  (see {browse "https://github.com/labordynamicsinstitute/ssc-mirror/tags":the snapshot list} and {browse "https://github.com/labordynamicsinstitute/ssc-mirror/blob/main/ERRATA.md":ERRATA} for known gaps)"'
+			di as err `"  (see {browse "https://github.com/ssc-ng/archive/tags":the snapshot list} and {browse "https://github.com/ssc-ng/archive/blob/main/ERRATA.md":ERRATA} for known gaps)"'
 			local diagnosed 1
 		}
 	}
@@ -436,7 +436,7 @@ program define ssc2_install
 	if `rc'==601 | `rc'==661 {
 		di
 		di as err /*
-*/ `"{p}{bf:ssc2 install}: apparent error in the package file for {bf:`pkgname'} in this snapshot; please open an issue at {browse "https://github.com/labordynamicsinstitute/ssc-mirror/issues":the mirror repository}, providing the package name and date{p_end}"'
+*/ `"{p}{bf:ssc2 install}: apparent error in the package file for {bf:`pkgname'} in this snapshot; please open an issue at {browse "https://github.com/ssc-ng/archive/issues":the mirror repository}, providing the package name and date{p_end}"'
 	}
 	exit `rc'
 end
@@ -642,10 +642,10 @@ program define ssc2_snapshots
 	syntax [, FROM(string)]
 	di as txt "Snapshots of the SSC archive are stored as date-stamped git tags"
 	di as txt "(YYYY-MM-DD) in the mirror repository:"
-	di as txt `"    {browse "https://github.com/labordynamicsinstitute/ssc-mirror/tags"}"'
+	di as txt `"    {browse "https://github.com/ssc-ng/archive/tags"}"'
 	di
 	di as txt "  - daily snapshots exist from {bf:2021-12-21} onward, with occasional"
-	di as txt `"    gaps listed in the mirror's {browse "https://github.com/labordynamicsinstitute/ssc-mirror/blob/main/ERRATA.md":ERRATA}"'
+	di as txt `"    gaps listed in the mirror's {browse "https://github.com/ssc-ng/archive/blob/main/ERRATA.md":ERRATA}"'
 	di as txt "  - three earlier snapshots exist: {bf:2017-08-10}, {bf:2021-04-15}, {bf:2021-08-10}"
 	di as txt "  - {bf:date(latest)} uses the most recent mirrored state"
 	di

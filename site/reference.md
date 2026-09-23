@@ -66,10 +66,10 @@ Subcommands passed through to `ssc` unchanged: `ssc2 new` (`whatsnew`), `ssc2 ho
 ## Options for selecting a snapshot (describe, install, type, copy)
 {: #options_snapshot}
 
-`date(datespec)` selects the snapshot of the SSC archive as of the specified date. *datespec* is either a date in **YYYY-MM-DD** format (for example, `date(2022-01-07)`) or **latest**, which uses the most recently mirrored state of the archive. If no snapshot exists for the specified date, an error message points to the [list of available snapshot dates](https://github.com/labordynamicsinstitute/ssc-mirror/tags).
+`date(datespec)` selects the snapshot of the SSC archive as of the specified date. *datespec* is either a date in **YYYY-MM-DD** format (for example, `date(2022-01-07)`) or **latest**, which uses the most recently mirrored state of the archive. If no snapshot exists for the specified date, an error message points to the [list of available snapshot dates](https://github.com/ssc-ng/archive/tags).
 {: .hang}
 
-`from(url)` specifies the base URL of the snapshot mirror. If `from()` is not specified, the URL is taken from the Stata global `SSC2_MIRROR` if that is set; otherwise from the environment variable `SSC2_MIRROR` if that is set; otherwise the built-in default `https://raw.githubusercontent.com/labordynamicsinstitute/ssc-mirror` is used. The overrides exist because the mirror may move to a different host; they also let you point at your own clone, which must use the same layout (*url*`/`*ref*`/fmwww.bc.edu/repec/bocode/`). The analogous `SSC2_MIRROR_API` global or environment variable overrides the API endpoint used only for diagnosing failed snapshot lookups.
+`from(url)` specifies the base URL of the snapshot mirror. If `from()` is not specified, the URL is taken from the Stata global `SSC2_MIRROR` if that is set; otherwise from the environment variable `SSC2_MIRROR` if that is set; otherwise the built-in default `https://raw.githubusercontent.com/ssc-ng/archive` is used. The overrides exist because the mirror may move to a different host; they also let you point at your own clone, which must use the same layout (*url*`/`*ref*`/fmwww.bc.edu/repec/bocode/`). The analogous `SSC2_MIRROR_API` global or environment variable overrides the API endpoint used only for diagnosing failed snapshot lookups.
 {: .hang}
 
 ## Options for use with ssc2 install
