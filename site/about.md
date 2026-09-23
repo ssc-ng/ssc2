@@ -7,7 +7,7 @@ nav_order: 2
 # About
 
 `ssc2` installs Stata packages from **date-based snapshots** of the SSC archive,
-mirrored at [ssc-mirror](https://github.com/labordynamicsinstitute/ssc-mirror).
+mirrored at [ssc-ng/archive](https://github.com/ssc-ng/archive).
 It is a drop-in replacement for the built-in `ssc` command.
 
 ## What it does
@@ -21,7 +21,7 @@ used.
 `ssc2` addresses this limitation by adding a `date()` option to the standard
 `ssc` workflow. It serves packages as they existed on a given date using daily
 snapshots stored in the
-[ssc-mirror](https://github.com/labordynamicsinstitute/ssc-mirror) repository,
+[ssc-ng/archive](https://github.com/ssc-ng/archive) repository,
 following the same general approach that dated CRAN snapshots introduced for the
 R ecosystem (MRAN/checkpoint, Posit Package Manager).
 
@@ -31,7 +31,7 @@ ensuring that existing workflows continue to function unchanged. The subcommands
 
 Snapshots are date-stamped git tags in the mirror repository. Daily snapshots
 exist from **2021-12-21** onward (with occasional gaps; see the mirror's
-[ERRATA](https://github.com/labordynamicsinstitute/ssc-mirror/blob/main/ERRATA.md));
+[ERRATA](https://github.com/ssc-ng/archive/blob/main/ERRATA.md));
 three earlier snapshots exist (2017-08-10, 2021-04-15, 2021-08-10).
 
 ## Installation
@@ -98,7 +98,7 @@ in Stata. It exercises dated installs, delegation to `ssc`, `date(latest)`,
 ## Links
 
 - Source: [github.com/ssc-ng/ssc2](https://github.com/ssc-ng/ssc2)
-- Snapshot mirror: [github.com/labordynamicsinstitute/ssc-mirror](https://github.com/labordynamicsinstitute/ssc-mirror)
+- Snapshot mirror: [github.com/ssc-ng/archive](https://github.com/ssc-ng/archive)
 - Issues and support: [issue tracker](https://github.com/ssc-ng/ssc2/issues)
 - License: see [LICENSE](https://github.com/ssc-ng/ssc2/blob/main/LICENSE)
 

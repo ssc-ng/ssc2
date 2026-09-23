@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 build_data.py -- regenerate the embedded data block of the picker
-script (assets/js/picker.js) from the live ssc-mirror repository.
+script (assets/js/picker.js) from the live ssc-ng/archive repository.
 
 Run manually:      python3 build_data.py [path/to/picker.js]
 Run by CI daily:   see .github/workflows/site.yml
@@ -26,8 +26,8 @@ import sys
 import time
 import urllib.request
 
-MIRROR_GIT = "https://github.com/labordynamicsinstitute/ssc-mirror.git"
-MIRROR_RAW = "https://raw.githubusercontent.com/labordynamicsinstitute/ssc-mirror"
+MIRROR_GIT = "https://github.com/ssc-ng/archive.git"
+MIRROR_RAW = "https://raw.githubusercontent.com/ssc-ng/archive"
 DAILY_START = dt.date(2021, 12, 21)
 DATE_TAG = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MARK_A, MARK_B = "/* @@DATA-START@@", "/* @@DATA-END@@ */"

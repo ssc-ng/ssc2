@@ -103,7 +103,7 @@ global SSC2_MIRROR "https://raw.githubusercontent.com/nonexistent-org/nonexisten
 capture noisily ssc2 install reghdfe, date(2022-01-07)
 assert _rc!=0
 // ...and the from() option must take precedence over the (bad) global
-ssc2 install reghdfe, date(2022-01-07) from("https://raw.githubusercontent.com/labordynamicsinstitute/ssc-mirror")
+ssc2 install reghdfe, date(2022-01-07) from("https://raw.githubusercontent.com/ssc-ng/archive")
 assert_reghdfe_version "5.7.3"
 ssc2 uninstall reghdfe
 macro drop SSC2_MIRROR

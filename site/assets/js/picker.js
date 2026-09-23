@@ -20,7 +20,7 @@ function buildSnapshotList(extra){
 let SNAPSHOTS = buildSnapshotList();
 
 const $ = id => document.getElementById(id);
-const DEFAULT_MIRROR = "https://raw.githubusercontent.com/labordynamicsinstitute/ssc-mirror";
+const DEFAULT_MIRROR = "https://raw.githubusercontent.com/ssc-ng/archive";
 const DEFAULT_DATE = "2022-01-07";
 const VALID = /^[a-z_][a-z0-9_]*$/;
 
@@ -301,7 +301,7 @@ acBox.addEventListener("mousedown", e=>{
 async function refreshSnapshots(){
   try{
     const r = await fetch(
-      "https://api.github.com/repos/labordynamicsinstitute/ssc-mirror/tags?per_page=100",
+      "https://api.github.com/repos/ssc-ng/archive/tags?per_page=100",
       {headers:{Accept:"application/vnd.github+json"}});
     if(!r.ok) return;
     const fresh = (await r.json()).map(t=>t.name)
@@ -323,7 +323,7 @@ function renderStats(extra){
   $("stats").innerHTML =
   "Snapshots: daily from <code>"+DAILY_START+"</code> to <code>"+LAST_SNAPSHOT+
   "</code>, <code>"+SNAPSHOTS.length+"</code> dates in all; exceptions are listed "+
-  "in the mirror's <a href=\"https://github.com/labordynamicsinstitute/ssc-mirror/blob/main/ERRATA.md\">ERRATA</a>. "+
+  "in the mirror's <a href=\"https://github.com/ssc-ng/archive/blob/main/ERRATA.md\">ERRATA</a>. "+
   "Autocomplete covers <code>"+PACKAGES.length+"</code> packages. "+
   "Data generated <code>"+BUILD_STAMP+"</code>"+(extra||"")+".";
 }

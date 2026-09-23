@@ -1,7 +1,7 @@
 # ssc2
 
 Install Stata packages from **date-based snapshots** of the SSC archive,
-mirrored at <https://github.com/labordynamicsinstitute/ssc-mirror>.
+mirrored at <https://github.com/ssc-ng/archive>.
 Backward compatible with `ssc`.
 
 ## Description
@@ -21,7 +21,7 @@ delegated.
 
 Snapshots are date-stamped git tags in the mirror repository. Daily
 snapshots exist from **2021-12-21** onward (with occasional gaps, see the
-mirror's [ERRATA](https://github.com/labordynamicsinstitute/ssc-mirror/blob/main/ERRATA.md));
+mirror's [ERRATA](https://github.com/ssc-ng/archive/blob/main/ERRATA.md));
 three earlier snapshots exist (2017-08-10, 2021-04-15, 2021-08-10). Type
 `ssc2 snapshots` for details.
 

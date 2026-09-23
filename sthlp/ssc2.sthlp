@@ -96,7 +96,7 @@ and {it:datespec} is a date in {bf:YYYY-MM-DD} format or the word
 Components (SSC) archive.  It extends the official {helpb ssc} command with
 the ability to install packages {it:as they existed on a given date}, using
 date-based snapshots of the SSC archive stored in the
-{browse "https://github.com/labordynamicsinstitute/ssc-mirror":ssc-mirror}
+{browse "https://github.com/ssc-ng/archive":ssc-ng/archive}
 repository.  This supports reproducibility: an analysis can be re-run with
 the exact package versions that were current at a given date.
 
@@ -165,7 +165,7 @@ Subcommands passed through to {helpb ssc} unchanged:
     format (for example, {cmd:date(2022-01-07)}) or {bf:latest}, which uses
     the most recently mirrored state of the archive.  If no snapshot exists
     for the specified date, an error message points to the
-    {browse "https://github.com/labordynamicsinstitute/ssc-mirror/tags":list of available snapshot dates}.
+    {browse "https://github.com/ssc-ng/archive/tags":list of available snapshot dates}.
 
 {phang}
 {opt from(url)} specifies the base URL of the snapshot mirror.
@@ -173,7 +173,7 @@ Subcommands passed through to {helpb ssc} unchanged:
     global {cmd:SSC2_MIRROR} if that is set; otherwise from the
     environment variable {cmd:SSC2_MIRROR} if that is set; otherwise the
     built-in default
-    {cmd:https://raw.githubusercontent.com/labordynamicsinstitute/ssc-mirror}
+    {cmd:https://raw.githubusercontent.com/ssc-ng/archive}
     is used.  The overrides exist because the mirror may move to a
     different host; they also let you point at your own clone, which must
     use the same layout
