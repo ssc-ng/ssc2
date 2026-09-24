@@ -103,7 +103,7 @@ jobs:
         # upload-pages-artifact above produces a Pages-specific tarball
         # that wrangler can't consume, so the preview job needs its own
         # plain copy of the built site.
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site-preview
           path: site/_site-preview
@@ -131,7 +131,7 @@ jobs:
       pull-requests: write     # only for the PR comment
     steps:
       - name: Download site artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: site-preview
           path: _site
