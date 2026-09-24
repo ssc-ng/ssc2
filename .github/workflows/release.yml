@@ -247,8 +247,15 @@ jobs:
 
   site:
     needs: release
+    # A called workflow can only narrow the caller's permissions, and
+    # GitHub checks every job in it at startup, including ones its `if`
+    # would skip. site.yml's PR-preview job asks for pull-requests: write,
+    # so it must be granted here too, or the whole run is rejected with
+    # a startup_failure before any job starts. It never runs from here
+    # (it is gated on pull_request events).
     permissions:
       contents: read
       pages: write
       id-token: write
+      pull-requests: write
     uses: ./.github/workflows/site.yml
