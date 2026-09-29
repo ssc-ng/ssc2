@@ -2,7 +2,8 @@
 import unittest
 
 from tools.version import (
-    Version, bump, known_versions, latest_release, next_version, parse, tag_of,
+    Version, bump, known_versions, latest_release, next_version, parse,
+    parse_tag, parse_version, tag_of,
 )
 
 # The tag list as it actually exists in this repository today, plus the
@@ -146,3 +147,22 @@ class TestNextVersion(unittest.TestCase):
     def test_no_prior_release_and_no_override_is_an_error(self):
         with self.assertRaises(ValueError):
             next_version(["v0.5-beta"])
+
+
+class TestVPrefixEnforcement(unittest.TestCase):
+    def test_parse_tag_requires_v(self):
+        self.assertEqual(parse_tag("v2.2.3"), Version(2, 2, 3, None))
+        self.assertIsNone(parse_tag("2.2.3"))
+
+    def test_parse_version_forbids_v(self):
+        self.assertEqual(parse_version("2.2.3"), Version(2, 2, 3, None))
+        self.assertIsNone(parse_version("v2.2.3"))
+
+    def test_bare_tag_is_not_a_release(self):
+        self.assertEqual(known_versions(["2.2.3", "v2.2.2"]),
+                         [Version(2, 2, 2, None)])
+        self.assertEqual(str(next_version(["v2.2.2", "2.2.3"])), "2.2.3")
+
+    def test_override_rejects_leading_v(self):
+        with self.assertRaises(ValueError):
+            next_version(["v2.2.1"], override="v2.3.0")

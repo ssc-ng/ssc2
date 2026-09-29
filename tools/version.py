@@ -6,7 +6,9 @@ repository. git_tags() is the single deliberate exception, kept here so
 both CLI scripts can share one definition of "what tags exist".
 
 Convention: version strings never carry a leading "v"; tag strings always
-do. Use tag_of() to convert. parse() accepts either.
+do. Use tag_of() to convert. parse() accepts either; parse_tag() (used
+for real git tags) requires the "v", and parse_version() (used for typed
+version overrides) forbids it.
 """
 from __future__ import annotations
 
@@ -65,13 +67,27 @@ def parse(text: str) -> Optional[Version]:
                    None if rc is None else int(rc))
 
 
+def parse_tag(text: str) -> Optional[Version]:
+    """Parse a git tag name: the leading "v" is mandatory.
+
+    A bare "2.2.3" tag is a naming-rule violation, so it is not a release
+    and must not take part in version arithmetic.
+    """
+    return parse(text) if text.startswith("v") else None
+
+
+def parse_version(text: str) -> Optional[Version]:
+    """Parse a version string: a leading "v" is rejected."""
+    return None if text.startswith("v") else parse(text)
+
+
 def tag_of(v: Version) -> str:
     return f"v{v}"
 
 
 def known_versions(tags: Iterable[str]) -> list:
     """Every tag that parses as a release version, ascending."""
-    found = [v for v in (parse(t) for t in tags) if v is not None]
+    found = [v for v in (parse_tag(t) for t in tags) if v is not None]
     return sorted(found, key=lambda v: v.sort_key)
 
 
@@ -105,7 +121,7 @@ def next_version(tags: Iterable[str], part: str = "patch",
     """
     tags = list(tags)
     if override:
-        v = parse(override)
+        v = parse_version(override)
         if v is None:
             raise ValueError(
                 f"{override!r} is not a valid version: expected N.N.N or "
