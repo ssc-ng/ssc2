@@ -1,7 +1,5 @@
 # ssc2
 
-## Overview
-
 Install Stata packages from **date-based snapshots** of the SSC archive,
 mirrored at <https://github.com/labordynamicsinstitute/ssc-mirror>.
 Backward compatible with `ssc`.
@@ -61,7 +59,7 @@ package — use the release tag instead of `latest`:
 
 ```stata
 * a specific release
-net install ssc2, all replace from("https://raw.githubusercontent.com/labordynamicsinstitute/stata-ssc2/v2.2.2/")
+net install ssc2, all replace from("https://raw.githubusercontent.com/labordynamicsinstitute/stata-ssc2/v2.2.3/")
 ```
 
 > The tag above is substituted at release time. On the `main` branch you
@@ -100,6 +98,29 @@ Run [`test.do`](test.do) in Stata. It exercises dated installs,
 delegation to `ssc`, `date(latest)`, `copy`/`type` with dates, and error
 handling.
 
+## Website
+
+The project website is at <https://labordynamicsinstitute.github.io/stata-ssc2/>,
+built with Jekyll using the
+[just-the-docs](https://just-the-docs.com/) theme.
+
+To preview it locally, use [`tools/serve_site.sh`](tools/serve_site.sh),
+which runs Jekyll in a container built from
+[`site/Dockerfile`](site/Dockerfile) with the same Ruby and gems as the
+**site** workflow. Docker or Podman is the only prerequisite.
+
+```bash
+tools/serve_site.sh          # live-reloading preview, then open the URL it prints
+tools/serve_site.sh build    # full CI replay: generators + jekyll build into site/_site
+tools/serve_site.sh test     # build, then run the checks in tests/test_site.py
+```
+
+The preview is served under the site's `baseurl`, at
+<http://localhost:4000/stata-ssc2/> rather than at `localhost:4000` —
+deliberately, because it is how GitHub project Pages serves it. Serving
+at the root would hide broken asset paths, which is precisely the bug
+this harness was built to catch.
+
 ## Releasing
 
 Releases are cut by the **release** GitHub Actions workflow, which
@@ -110,3 +131,4 @@ renders the version placeholders, publishes the installable tree on the
 ## Current Author(s)
 
 - Lars Vilhuber
+- Ian Joyce and contributors

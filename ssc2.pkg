@@ -14,8 +14,8 @@ d KW: reproducibility
 d
 d Requires: Stata version 14 (https support; to be confirmed)
 d
-d Version: 2.2.2
-d Distribution-Date: 20260730
+d Version: 2.2.3
+d Distribution-Date: 20260929
 d
 d Authors: Lars Vilhuber
 d Support: https://github.com/labordynamicsinstitute/stata-ssc2/issues
