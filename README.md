@@ -1,5 +1,9 @@
 # ssc2
 
+[![Site build](https://github.com/ssc-ng/ssc2/actions/workflows/site.yml/badge.svg?branch=main)](https://github.com/ssc-ng/ssc2/actions/workflows/site.yml?query=branch%3Amain)
+[![Open issues](https://img.shields.io/github/issues/ssc-ng/ssc2)](https://github.com/ssc-ng/ssc2/issues)
+[![Last commit](https://img.shields.io/github/last-commit/ssc-ng/ssc2)](https://github.com/ssc-ng/ssc2/commits/main)
+
 Install Stata packages from **date-based snapshots** of the SSC archive,
 mirrored at <https://github.com/ssc-ng/archive>.
 Backward compatible with `ssc`.
@@ -131,4 +135,12 @@ renders the version placeholders, publishes the installable tree on the
 ## Current Author(s)
 
 - Lars Vilhuber
-- Ian Joyce and contributors
+- Ian Joyce
+
+### Contributors
+
+[![Contributors](https://contrib.rocks/image?repo=ssc-ng/ssc2)](https://github.com/ssc-ng/ssc2/graphs/contributors)
+
+## History
+
+The `ssc2`  command and the associated archive were originally developed by Lars Vilhuber at <https://github.com/labordynamicsinstitute/stata-ssc2>, and contributed to SSC-NG in Sept 2026.
