@@ -146,7 +146,7 @@ them — see below.
 | `@DATE_COMPACT@` | `20260730` |
 
 They appear in `ado/ssc2.ado`, `sthlp/ssc2.sthlp`, `ssc2.pkg`,
-`stata.toc`, `README.md`, `site/about.md` and `site/index.html`.
+`stata.toc`, `README.md`, `site/about.md` and `site/interactive.html`.
 `tests/test_sources.py` fails the build if a literal version creeps back
 into a source file, or if an undefined token is used.
 
@@ -163,7 +163,7 @@ date.
 
 The rendering pattern is `@[A-Z][A-Z0-9_]*@`. It deliberately does not
 match the `@@DATA-START@@` / `@@DATA-END@@` markers that
-`site/build_data.py` relies on in `site/index.html`. **Do not widen it.**
+`site/build_data.py` relies on in `site/assets/js/picker.js`. **Do not widen it.**
 
 ## Building a release tree locally
 

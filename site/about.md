@@ -1,7 +1,8 @@
 ---
 layout: default
 title: About
-nav_order: 2
+nav_order: 1
+permalink: /
 ---
 
 # About
@@ -9,6 +10,26 @@ nav_order: 2
 `ssc2` installs Stata packages from **date-based snapshots** of the SSC archive,
 mirrored at [ssc-ng/archive](https://github.com/ssc-ng/archive).
 It is a drop-in replacement for the built-in `ssc` command.
+
+## Quick start
+
+```stata
+* Install from SSC
+ssc install ssc2
+
+* The current stable release
+net install ssc2, all replace from("https://raw.githubusercontent.com/ssc-ng/ssc2/latest/")
+
+* install packages
+ssc2 install <package_name>, date(<YYYY-MM-DD>)
+* e.g. ssc2 install reghdfe, date(2026-10-20)
+```
+
+## Interactive code generator
+
+The [interactive page](interactive.html) lets you pick a snapshot date for
+each package and writes the corresponding `ssc2` commands for you, ready to
+paste into a do-file.
 
 ## What it does
 
@@ -69,7 +90,7 @@ ssc2 install reghdfe, date(latest) replace
 ssc2 hot, n(5)
 ```
 
-The [snapshot picker](.) on the home page writes these commands for you.
+The [interactive page](interactive.html) writes these commands for you.
 
 ## Overriding the mirror location
 
