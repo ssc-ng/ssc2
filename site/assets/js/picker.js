@@ -305,7 +305,7 @@ async function refreshSnapshots(){
       {headers:{Accept:"application/vnd.github+json"}});
     if(!r.ok) return;
     const fresh = (await r.json()).map(t=>t.name)
-      .filter(n=>/^\d{4}-\d{2}-\d{2}$/.test(n) && n > LAST_SNAPSHOT).sort();
+      .filter(n=>/^\d{4}-\d{2}-\d{2}$/.test(n) && n > LAST_SNAPSHOT && !MISSING.includes(n)).sort();
     if(!fresh.length) return;
     LAST_SNAPSHOT = fresh[fresh.length-1];
     const kept = rows.map(rowDate);
