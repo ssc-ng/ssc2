@@ -78,9 +78,9 @@ stage_and_generate() {
   # Same order as site.yml: render placeholders first, so that data
   # spliced in afterwards cannot trip the leftover-placeholder check.
   echo "==> rendering version placeholders"
-  python3 "$REPO/tools/render_docs.py" "$STAGE/about.md" "$STAGE/index.html"
+  python3 "$REPO/tools/render_docs.py" "$STAGE/about.md" "$STAGE/interactive.html" "$STAGE/assets/js/picker.js"
   echo "==> refreshing embedded snapshot data"
-  python3 "$REPO/site/build_data.py" "$STAGE/index.html"
+  python3 "$REPO/site/build_data.py" "$STAGE/assets/js/picker.js"
   echo "==> regenerating the Reference page"
   python3 "$REPO/site/build_reference.py" "$REPO/sthlp/ssc2.sthlp" "$STAGE/reference.md"
 }

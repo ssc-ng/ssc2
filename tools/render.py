@@ -7,7 +7,7 @@ easy to catch in a test.
 
 The token pattern is intentionally narrow. It must not match the
 @@DATA-START@@ / @@DATA-END@@ markers that site/build_data.py depends on
-in site/index.html -- the hyphens keep them out of the character class --
+in site/assets/js/picker.js -- the hyphens keep them out of the character class --
 and it must not match CSS at-rules such as @media, which are lowercase.
 Do not widen it.
 """

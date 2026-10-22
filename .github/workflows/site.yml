@@ -64,9 +64,9 @@ jobs:
         # Runs before the data refresh below so that upstream mirror data
         # spliced into the picker script cannot introduce an
         # @TOKEN@-shaped string that render_docs.py would otherwise fail
-        # the build on. index.html carries no tokens today but stays on
+        # the build on. interactive.html carries no tokens today but stays on
         # the list so any future ones are rendered rather than deployed.
-        run: python3 tools/render_docs.py site/about.md site/index.html site/assets/js/picker.js
+        run: python3 tools/render_docs.py site/about.md site/interactive.html site/assets/js/picker.js
       - name: Refresh embedded snapshot and package data
         run: python3 site/build_data.py site/assets/js/picker.js
       - name: Regenerate Reference page from the Stata help file

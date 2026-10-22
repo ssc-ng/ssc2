@@ -205,19 +205,19 @@ class ExternalPickerScriptTest(unittest.TestCase):
             "before the body exists",
         )
 
-    def test_index_front_matter_opts_into_picker(self):
-        index = (self.SITE / "index.html").read_text(encoding="utf-8")
-        front = index.split("---")[1]
+    def test_interactive_front_matter_opts_into_picker(self):
+        page = (self.SITE / "interactive.html").read_text(encoding="utf-8")
+        front = page.split("---")[1]
         self.assertRegex(
             front,
             r"(?m)^picker: true$",
-            "site/index.html must set `picker: true` or the custom-head "
+            "site/interactive.html must set `picker: true` or the custom-head "
             "gate never loads the picker script",
         )
 
 
 class BuiltPickerScriptTest(unittest.TestCase):
-    """When the site has been built, index.html must actually load the
+    """When the site has been built, interactive.html must actually load the
     picker asset and the asset must exist in the output. Skipped on a
     clean checkout, like the other built-output checks."""
 
@@ -226,14 +226,14 @@ class BuiltPickerScriptTest(unittest.TestCase):
             self.skipTest("site/_site not built; run tools/serve_site.sh")
         self.baseurl = read_config().get("baseurl", "")
 
-    def test_built_index_links_existing_picker_script(self):
-        html = (BUILT / "index.html").read_text(encoding="utf-8")
+    def test_built_interactive_links_existing_picker_script(self):
+        html = (BUILT / "interactive.html").read_text(encoding="utf-8")
         scripts = [
             link
             for link in _LINK.findall(html)
             if link.endswith("/assets/js/picker.js")
         ]
-        self.assertTrue(scripts, "built index.html does not load picker.js")
+        self.assertTrue(scripts, "built interactive.html does not load picker.js")
         for src in scripts:
             self.assertTrue(
                 src.startswith(self.baseurl + "/"),
@@ -242,7 +242,7 @@ class BuiltPickerScriptTest(unittest.TestCase):
             relative = src[len(self.baseurl) :].lstrip("/")
             self.assertTrue(
                 (BUILT / relative).is_file(),
-                "index.html loads %s but %s was not generated" % (src, relative),
+                "interactive.html loads %s but %s was not generated" % (src, relative),
             )
 
 

@@ -50,9 +50,9 @@ class TestTokenRegex(unittest.TestCase):
     def test_matches_a_token(self):
         self.assertEqual(TOKEN_RE.findall("x @VERSION@ y"), ["@VERSION@"])
 
-    def test_does_not_match_the_data_markers_in_index_html(self):
+    def test_does_not_match_the_data_markers_in_picker_js(self):
         # site/build_data.py rewrites the block between these markers.
-        # If TOKEN_RE ever matched them, rendering site/index.html would
+        # If TOKEN_RE ever matched them, rendering site/assets/js/picker.js would
         # fail the build (or, worse, mangle the markers).
         marked = "/* @@DATA-START@@ */\nconst X=1;\n/* @@DATA-END@@ */"
         self.assertEqual(TOKEN_RE.findall(marked), [])

@@ -108,7 +108,7 @@ class TestCitationFile(unittest.TestCase):
         self.assertRegex(read("CITATION.cff"), r"(?m)^version: \S+$")
 
 
-DOC_FILES = ["README.md", "site/about.md", "site/index.html",
+DOC_FILES = ["README.md", "site/about.md", "site/interactive.html",
              "site/assets/js/picker.js"]
 MOVED_REPO_FILES = [
     "README.md",
