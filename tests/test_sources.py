@@ -178,10 +178,10 @@ class TestMovedRepositoryUrls(unittest.TestCase):
     def test_public_files_no_longer_reference_the_old_repo_slug(self):
         for rel in MOVED_REPO_FILES:
             with self.subTest(file=rel):
-                self.assertNotIn(
-                    "labordynamicsinstitute/stata-ssc2",
-                    read(rel),
-                )
+                # The README's "History" section credits the original
+                # repository on purpose; everything above it must not.
+                text = read(rel).split("\n## History", 1)[0]
+                self.assertNotIn("labordynamicsinstitute/stata-ssc2", text)
 
     def test_public_files_use_the_new_repo_slug_where_expected(self):
         expected = {

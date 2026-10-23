@@ -7,14 +7,18 @@ Run manually:      python3 build_data.py [path/to/picker.js]
 Run by CI daily:   see .github/workflows/site.yml
 What it rewrites (everything between @@DATA-START@@ and @@DATA-END@@):
   BUILD_STAMP    today's date (UTC)
-  LAST_SNAPSHOT  newest date tag on the mirror
-  MISSING        dates with no tag since DAILY_START (computed, not assumed)
+  LAST_SNAPSHOT  newest date tag on the mirror that ERRATA.md does not list
+                 as absent
+  MISSING        dates with no tag since DAILY_START (computed, not assumed),
+                 plus every date the mirror's ERRATA.md lists as absent
+                 (a tag can exist for a date that ERRATA declares skipped)
   INCLUDES       tags older than DAILY_START
   PACKAGES       every package name in the mirror's `releases` branch,
                  harvested from the per-letter stata.toc files
 
 Uses `git ls-remote --tags` for the tag list (no API, no rate limits)
-and raw.githubusercontent.com for the package tocs (no rate limits).
+and raw.githubusercontent.com for the package tocs and ERRATA.md (no
+rate limits).
 Exits 0 with "unchanged" if the block is already current, so a CI job
 can skip the commit step.
 """
@@ -44,6 +48,31 @@ def snapshot_tags() -> list[dt.date]:
     return sorted(tags)
 
 
+ERRATA_ROW = re.compile(r"^\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|")
+
+
+def parse_absent_dates(errata: str) -> set[dt.date]:
+    """Expand the start/end rows of ERRATA.md's 'Absent dates' table."""
+    absent = set()
+    in_section = False
+    for line in errata.splitlines():
+        if line.startswith("#"):
+            in_section = line.lstrip("#").strip().lower() == "absent dates"
+            continue
+        m = ERRATA_ROW.match(line) if in_section else None
+        if m:
+            d, end = (dt.date.fromisoformat(g) for g in m.groups())
+            while d <= end:
+                absent.add(d)
+                d += dt.timedelta(days=1)
+    return absent
+
+
+def errata_absent_dates() -> set[dt.date]:
+    with urllib.request.urlopen(f"{MIRROR_RAW}/main/ERRATA.md", timeout=30) as fh:
+        return parse_absent_dates(fh.read().decode("utf-8"))
+
+
 def package_names() -> list[str]:
     names = set()
     for letter in string.ascii_lowercase + "_":
@@ -70,12 +99,13 @@ def main() -> int:
     t0 = time.time()
 
     tags = snapshot_tags()
-    last = max(tags)
+    absent = errata_absent_dates()
+    last = max(t for t in tags if t not in absent)
     includes = [t for t in tags if t < DAILY_START]
     have = set(tags)
     missing, d = [], DAILY_START
-    while d <= last:
-        if d not in have:
+    while d <= max(tags):
+        if d not in have or d in absent:
             missing.append(d)
         d += dt.timedelta(days=1)
     pkgs = package_names()
