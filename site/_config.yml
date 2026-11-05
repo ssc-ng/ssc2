@@ -1,6 +1,8 @@
 title: ssc2
 description: Install Stata packages from date-based snapshots of the SSC archive
 theme: just-the-docs
+plugins:
+  - ssc-ng-theme
 
 # The site is served from GitHub *project* Pages, i.e. under a path
 # prefix rather than at the host root. `url` is the origin only; the
@@ -11,7 +13,6 @@ url: "https://ssc-ng.net"
 baseurl: "/ssc2"
 
 search_enabled: true
-color_scheme: light
 
 nav_external_links:
   - title: GitHub
