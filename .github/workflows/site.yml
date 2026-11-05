@@ -1,5 +1,7 @@
 # Build and deploy the ssc2 website (site/ directory) via Action-based
-# GitHub Pages deployment using Jekyll (just-the-docs theme).
+# GitHub Pages deployment using Jekyll (just-the-docs theme, with the
+# shared look from the ssc-ng-theme gem, updated to its newest version on every
+# build).
 #
 #   build:  runs on every PR and every push to main, weekly by cron, and
 #           whenever release.yml calls this workflow. Renders version
@@ -71,10 +73,8 @@ jobs:
         run: python3 site/build_data.py site/assets/js/picker.js
       - name: Regenerate Reference page from the Stata help file
         run: python3 site/build_reference.py sthlp/ssc2.sthlp site/reference.md
-      - uses: ruby/setup-ruby@v1
+      - uses: ssc-ng/theme/.github/actions/setup@v1
         with:
-          ruby-version: "3.3"
-          bundler-cache: true
           working-directory: site
       - name: Build Jekyll site
         run: bundle exec jekyll build
